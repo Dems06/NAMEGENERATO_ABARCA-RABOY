@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Favorites - Name Suggestion Generators</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+  
+/* ===== FAVORITES SECTIONS ===== */
+section {
+  background: rgba(255,255,255,0.03);
+  padding: 1.2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+body.light section {
+  background: rgba(0,0,0,0.04);
+}
+
+h2 {
+  margin-bottom: 0.8rem;
+}
+
+/* ===== FAVORITES LIST ===== */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: var(--card-bg-dark);
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 0.6rem;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  animation: liAppear 0.4s ease forwards;
+}
+
+body.light li {
+  background: var(--card-bg-light);
+}
+
+li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+}
+
+/* ===== NAME TEXT ===== */
+.fav-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.fav-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.fav-meaning {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+body.light .fav-meaning {
+  color: #555;
+}
+
+/* ===== REMOVE BUTTON ===== */
+.remove-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #ff5c5c;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.remove-btn:hover {
+  transform: scale(1.2);
+  color: #ff2e2e;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  padding: 0.8rem 0;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes liAppear {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+
+
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="index.html" class="back-home">
+    ← Home
+  </a>
+
+  <button onclick="toggleTheme()" class="icon-btn" aria-label="Toggle light/dark mode">
+    🌙
+  </button>
+</nav>
+
+
+<main>
+  <h1>Your Favorite Names</h1>
+
+  <section id="boyFavSection" aria-label="Favorite boy names">
+    <h2>Boy Names</h2>
+    <ul id="boyFavList"></ul>
+  </section>
+
+  <section id="girlFavSection" aria-label="Favorite girl names">
+    <h2>Girl Names</h2>
+    <ul id="girlFavList"></ul>
+  </section>
+
+  <section id="biblicalFavSection" aria-label="Favorite biblical names">
+    <h2>Biblical Names</h2>
+    <ul id="biblicalFavList"></ul>
+  </section>
+
+  <p id="emptyMsg" style="text-align:center; margin-top: 2rem; color: #888;"></p>
+</main>
+
+<script>
+ 
+function toggleTheme() {
+  document.body.classList.toggle('light');
+}
+
+const boyFav = JSON.parse(localStorage.getItem('favoritesBoy')) || [];
+const girlFav = JSON.parse(localStorage.getItem('favoritesGirl')) || [];
+const biblicalFav = JSON.parse(localStorage.getItem('favoritesBiblical')) || [];
+
+const emptyMsg = document.getElementById('emptyMsg');
+
+function renderList(listEl, data, storageKey) {
+  listEl.innerHTML = '';
+
+  if (!data.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty';
+    empty.textContent = 'No favorites yet.';
+    listEl.appendChild(empty);
+    return;
+  }
+
+  data.forEach((item, index) => {
+    const li = document.createElement('li');
+
+    const textWrap = document.createElement('div');
+    textWrap.className = 'fav-text';
+
+    const name = document.createElement('span');
+    name.className = 'fav-name';
+    name.textContent = item.name;
+
+    const meaning = document.createElement('span');
+    meaning.className = 'fav-meaning';
+    meaning.textContent = item.meaning;
+
+    textWrap.append(name, meaning);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.innerHTML = '❌';
+    removeBtn.title = 'Remove from favorites';
+
+    removeBtn.onclick = () => {
+      li.classList.add('fade-out');
+      setTimeout(() => {
+        data.splice(index, 1);
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        renderAll();
+      }, 300);
+    };
+
+    li.append(textWrap, removeBtn);
+    listEl.appendChild(li);
+  });
+}
+
+function renderAll() {
+  renderList(boyFavList, boyFav, 'favoritesBoy');
+  renderList(girlFavList, girlFav, 'favoritesGirl');
+  renderList(biblicalFavList, biblicalFav, 'favoritesBiblical');
+
+  emptyMsg.textContent =
+    !boyFav.length && !girlFav.length && !biblicalFav.length
+      ? '✨ You haven’t saved any favorite names yet.'
+      : '';
+}
+
+window.onload = renderAll;
+
+
+</script>
+
+</body>
+</html>

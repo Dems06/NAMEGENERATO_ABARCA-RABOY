@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Name Suggestion Generators</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- DARK/LIGHT MODE BUTTON -->
+<button class="icon-btn" onclick="toggleTheme()">🌙 / ☀️</button>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <h1>Welcome to Name Suggestion Generator</h1>
+  <p>Discover meaningful, creative, and beautiful names instantly!</p>
+  <button onclick="document.querySelector('.categories').scrollIntoView({behavior:'smooth'})">Start Generating</button>
+</section>
+
+<!-- GENERATOR CARDS -->
+<section class="categories">
+
+    <!-- ALL NAMES PREVIEW -->
+
+               
+  <div class="grid">
+      <!-- Boy -->  
+      <a href="boy.html" class="card">
+          <div class="icon">👦</div>
+          <h3>Boy Name Generator</h3>
+          <p>Strong, modern, and meaningful name ideas for boys.</p>
+      </a>
+
+      <!-- Girl -->
+      <a href="girl.html" class="card">
+          <div class="icon">👧</div>
+          <h3>Girl Name Generator</h3>
+          <p>Elegant, cute, and timeless girl name suggestions.</p>
+      </a>
+
+      <!-- Biblical -->
+      <a href="biblical.html" class="card">
+          <div class="icon">📜</div>
+          <h3>Biblical Name Generator</h3>
+          <p>Faith-based name ideas inspired by biblical history.</p>
+      </a>
+  </div>
+
+  <!-- Favorites centered below -->
+  <div class="favorites">
+      <a href="favorites.html" class="card">
+          <div class="icon">⭐</div>
+          <h3>Favorites</h3>
+          <p>View all your saved favorite names</p>
+      </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer><marquee behavior="left" direction="left">  BY ABARCA AND RABOY</marquee>
+  
+</footer>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+}
+
+// Remember theme choice
+if(localStorage.getItem('theme') === 'light') document.body.classList.add('light');
+</script>
+
+</body>
+</html>
